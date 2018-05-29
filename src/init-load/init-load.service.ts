@@ -151,7 +151,6 @@ export class InitLoadService {
             if (productWoo.length >= 1) {
               exist = true;
             }
-            global.console.log(product.sku);
 
             // Obtengo el inventario del producto
             const responseVendInventory = await this.vendhq.get(`products/${product.id}/inventory`);
@@ -174,7 +173,6 @@ export class InitLoadService {
                 }
               }
             }
-            global.console.log(tags);
 
             // Comprobación de inventario
             let numberInventory = 0;
@@ -190,7 +188,6 @@ export class InitLoadService {
               if (Array.isArray(this._categories)) {
                 const { data } = await this.vendhq.get(`product_types/${product.product_type_id}`);
                 const searchCategory = this._categories.find((category) => category.name === data.data.name);
-                global.console.log(searchCategory);
                 if (searchCategory){
                   categories.push({
                     id: searchCategory.id,
@@ -223,7 +220,6 @@ export class InitLoadService {
                   };
                   const response = await this.wooCommerce.postAsync('products', dataUpload);
                   const uti = JSON.parse(response.toJSON().body);
-                  global.console.log(uti.name);
                 }
                 else {
                   const dataUpload = {

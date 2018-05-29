@@ -9,13 +9,8 @@ export class InitLoadController {
 
   @Post()
   async execute(@Res() res) {
-    const workComplete = await this.initLoadService.execute();
-    if (workComplete) {
-      res.status(HttpStatus.OK).send(workComplete);
-    } else {
-      res.status(HttpStatus.NOT_ACCEPTABLE).json([]);
-    }
+    global.console.log('entro');
+    this.initLoadService.execute();
+    res.status(HttpStatus.NO_CONTENT).redirect('https://ekistudio.com/sardarabad/wp-admin/');
   }
-
-
 }

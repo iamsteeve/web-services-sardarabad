@@ -60,8 +60,8 @@ export class InitLoadService {
     });
 
     try {
-      // await this.createTags();
-      // await this.createCategories();
+      await this.createTags();
+      await this.createCategories();
       await this.createProducts();
       return true;
     } catch (e) {
@@ -133,11 +133,7 @@ export class InitLoadService {
 
       if (await workTagsSuccess && await workCategoriesSuccess) {
         // Obtengo todos los productos
-        const responseProducts = await this.vendhq.get('products', {
-          params: {
-            page_size: 1000,
-          },
-        });
+        const responseProducts = await this.vendhq.get('products');
 
         // Cargamos la respuesta a la variable products
         this._products = await responseProducts.data.data;
@@ -157,7 +153,6 @@ export class InitLoadService {
             }
             global.console.log(product.sku);
 
-            global.console.log(product.tag_ids[0]);
             // Obtengo el inventario del producto
             const responseVendInventory = await this.vendhq.get(`products/${product.id}/inventory`);
             const inventoryProduct = await responseVendInventory.data.data;
@@ -168,14 +163,14 @@ export class InitLoadService {
               for (const tagId of product.tag_ids) {
                 if (Array.isArray(this._tags)) {
                   const { data } = await this.vendhq.get(`tags/${tagId}`);
-                  global.console.log(data.data);
+
                   const searchTag = this._tags.find((tag) => tag.name === data.data.name);
-                  global.console.log(searchTag);
-                  global.console.log(product);
-                  tags.push({
-                    id: searchTag.id,
-                    name: data.data.name,
-                  });
+                  if (searchTag.id){
+                    tags.push({
+                      id: searchTag.id,
+                      name: data.data.name,
+                    });
+                  }
                 }
               }
             }
@@ -196,7 +191,7 @@ export class InitLoadService {
                 const { data } = await this.vendhq.get(`product_types/${product.product_type_id}`);
                 const searchCategory = this._categories.find((category) => category.name === data.data.name);
                 global.console.log(searchCategory);
-                if (searchCategory.id){
+                if (searchCategory){
                   categories.push({
                     id: searchCategory.id,
                     name: data.data.name,
@@ -204,7 +199,6 @@ export class InitLoadService {
                 }
               }
             }
-            global.console.log(categories);
 
             if (!product.has_variants) {
               if (!inventoryProduct[0]) {

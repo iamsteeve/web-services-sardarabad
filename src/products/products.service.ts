@@ -37,6 +37,7 @@ export class ProductsService {
       consumerSecret: credentials.credentialsWooCommerce.consumerSecret,
       wpAPI: true,
       version: 'wc/v2',
+      queryStringAuth: true,
     });
     this.vendhq = axios.create({
       baseURL: `https://${credentials.credentialsVend.vendhqDomain}.vendhq.com/api/2.0/`,
